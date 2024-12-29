@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+@onready var camera_pivot: Node3D = $CameraPivot
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
@@ -15,7 +16,6 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -30,7 +30,6 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
-
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
@@ -43,7 +42,6 @@ func _input(event: InputEvent) -> void:
 func handle_camera_rotation() -> void:
 	if Input.MOUSE_MODE_CAPTURED:
 		rotate_y(mouse_motion.x)
+		camera_pivot.rotate_x(mouse_motion.y)
+		camera_pivot.rotation_degrees.x = clampf(camera_pivot.rotation_degrees.x, -90, 90)
 		mouse_motion = Vector2.ZERO
-	
-		#rotate_x(mouse_motion.y)
-		#mouse_motion = Vector2.ZERO
